@@ -3,12 +3,30 @@
 #include "color.h"
 #include "ray.h"
 
+/*
+* Checks whether a ray collides with a sphere.
+* @param center Centerpoint of the sphere.
+* @param radius Radius of the sphere.
+* @param r The ray to check collision with.
+* @return True if collided, otherwise false.
+*/
+bool hitSphere(const point3& center, const double radius, const ray& r) {
+    vec3 oc = r.origin() - center; // Vector from origin to center
+    auto a = dot(r.direction(), r.direction());
+    auto b = 2.0 * dot(oc, r.direction());
+    auto c = dot(oc, oc) - radius * radius;
+    auto discriminant = b * b - 4 * a * c;
+    return (discriminant > 0);
+}
+
 /**
 * Calculate a color for the ray. When compared to rays next to each other, they form a gradient.
 * @param r A ray to get the color from.
 * @return A color for this ray. 
 */
 color rayColor(const ray& r) {
+    if (hitSphere(point3(0, 0, -1), 0.5, r))
+        return color(1, 0, 0); // Return red
     vec3 unitDirection = unitVector(r.direction());
     auto t = 0.5 * (unitDirection.y() + 1);
     return (1.0 - t) * color(1.0) + t * color(0.5, 0.7, 1.0); // LERP the colors

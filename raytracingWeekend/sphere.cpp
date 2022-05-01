@@ -24,7 +24,8 @@ bool sphere::hit(const ray& r, double tMin, double tMax, hitRecord& rec)
 
     rec.t = root;
     rec.p = r.at(rec.t);
-    rec.normal = (rec.p - center) / radius; // Normalise the normal
+    vec3 outwardNormal = (rec.p - center) / radius; 
+    rec.setFaceNormal(r, outwardNormal);
 
     assert(rec.normal.lengthSquare() == 1);
     return true;

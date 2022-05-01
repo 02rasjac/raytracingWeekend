@@ -6,6 +6,17 @@ struct hitRecord {
 	point3 p;
 	vec3 normal;
 	double t;
+	bool frontFace;
+
+	/*
+	* Set the facenormal to always point *against* the hitting ray.
+	* @param r The hitting ray.
+	* @param outwardNormal The normal pointing outwards.
+	*/
+	inline void setFaceNormal(const ray& r, const vec3& outwardNormal) {
+		frontFace = dot(r.direction(), outwardNormal) < 0; // Ray hits face from outside
+		normal = frontFace ? outwardNormal : -outwardNormal;
+	}
 };
 
 class hittable {

@@ -2,6 +2,7 @@
 #include "vec3.h"
 #include "color.h"
 #include "ray.h"
+#include "sphere.h"
 
 /*
 * Checks whether a ray collides with a sphere.
@@ -28,11 +29,12 @@ double hitSphere(const point3& center, const double radius, const ray& r) {
 * @return A color for this ray. 
 */
 color rayColor(const ray& r) {
-    point3 sphereCenter(0, 0, -1);
-    auto t = hitSphere(sphereCenter, 0.5, r);
+    //point3 sphereCenter(0, 0, -1);
+    sphere sph(point3(0, 0, -1), 0.5);
+    auto t = hitSphere(sph.center, sph.radius, r);
     // Color based on normal for the sphere
     if (t > 0.0) { // hit sphere at r(t)
-        auto normal = r.at(t) - sphereCenter;
+        auto normal = r.at(t) - sph.center;
         return 0.5 * color(normal.x() + 1, normal.y() + 1, normal.z() + 1);
     }
     // Background

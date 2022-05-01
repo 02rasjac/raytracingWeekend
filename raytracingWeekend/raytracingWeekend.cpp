@@ -12,14 +12,14 @@
 */
 double hitSphere(const point3& center, const double radius, const ray& r) {
     vec3 oc = r.origin() - center; // Vector from origin to center
-    auto a = dot(r.direction(), r.direction());
-    auto b = 2.0 * dot(oc, r.direction());
-    auto c = dot(oc, oc) - radius * radius;
-    auto discriminant = b * b - 4 * a * c;
+    auto a = r.direction().lengthSquare();
+    auto halfB = dot(oc, r.direction());
+    auto c = oc.lengthSquare() - radius * radius;
+    auto discriminant = halfB * halfB - a * c;
     if (discriminant < 0) {
         return -1.0; // Did not hit the sphere
     } 
-    return (-b - sqrt(discriminant)) / (2.0 * a); // Return t from at^2 + bt + c = 0
+    return (-halfB - sqrt(discriminant)) / a; // Return t from at^2 + bt + c = 0
 }
 
 /**

@@ -29,5 +29,5 @@ public:
 	* @param rec Record to save the collision in.
 	* @return True if collided, otherwise false.
 	*/
-	virtual bool hit(const ray& r, double tMin, double tMax, hitRecord& rec) = 0;
+	virtual bool hit(const ray& r, double tMin, double tMax, hitRecord& rec) const = 0;
 };

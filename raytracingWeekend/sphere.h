@@ -7,7 +7,7 @@ class sphere : public hittable {
 public:
 	sphere() = default;
 	sphere(const point3& center, const double radius) : center(center), radius(radius) {};
-	virtual bool hit(const ray& r, double tMin, double tMax, hitRecord& rec);
+	virtual bool hit(const ray& r, double tMin, double tMax, hitRecord& rec) const override;
 
 public:
 	point3 center;

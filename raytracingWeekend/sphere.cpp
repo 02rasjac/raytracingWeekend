@@ -1,16 +1,15 @@
 #include "sphere.h"
 #include <assert.h>
 
-bool sphere::hit(const ray& r, double tMin, double tMax, hitRecord& rec)
-{
+bool sphere::hit(const ray& r, double tMin, double tMax, hitRecord& rec) const {
     vec3 oc = r.origin() - center; // Vector from origin to center
     auto a = r.direction().lengthSquare();
     auto halfB = dot(oc, r.direction());
     auto c = oc.lengthSquare() - radius * radius;
     auto discriminant = halfB * halfB - a * c;
-    if (discriminant < 0) 
+    if (discriminant < 0)
         return false; // Did not hit the sphere
-    
+
     auto sqrtd = sqrt(discriminant);
 
     // Check if the roots are within reach
@@ -24,7 +23,7 @@ bool sphere::hit(const ray& r, double tMin, double tMax, hitRecord& rec)
 
     rec.t = root;
     rec.p = r.at(rec.t);
-    vec3 outwardNormal = (rec.p - center) / radius; 
+    vec3 outwardNormal = (rec.p - center) / radius;
     rec.setFaceNormal(r, outwardNormal);
 
     assert(rec.normal.lengthSquare() == 1);

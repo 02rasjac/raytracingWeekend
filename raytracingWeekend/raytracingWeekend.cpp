@@ -8,15 +8,18 @@
 * @param center Centerpoint of the sphere.
 * @param radius Radius of the sphere.
 * @param r The ray to check collision with.
-* @return True if collided, otherwise false.
+* @return Parameter t on the ray r that first hit the sphere. If no collison, then returns -1.0.
 */
-bool hitSphere(const point3& center, const double radius, const ray& r) {
+double hitSphere(const point3& center, const double radius, const ray& r) {
     vec3 oc = r.origin() - center; // Vector from origin to center
     auto a = dot(r.direction(), r.direction());
     auto b = 2.0 * dot(oc, r.direction());
     auto c = dot(oc, oc) - radius * radius;
     auto discriminant = b * b - 4 * a * c;
-    return (discriminant > 0);
+    if (discriminant < 0) {
+        return -1.0; // Did not hit the sphere
+    } 
+    return (-b - sqrt(discriminant)) / (2.0 * a); // Return t from at^2 + bt + c = 0
 }
 
 /**
@@ -25,10 +28,16 @@ bool hitSphere(const point3& center, const double radius, const ray& r) {
 * @return A color for this ray. 
 */
 color rayColor(const ray& r) {
-    if (hitSphere(point3(0, 0, -1), 0.5, r))
-        return color(1, 0, 0); // Return red
+    point3 sphereCenter(0, 0, -1);
+    auto t = hitSphere(sphereCenter, 0.5, r);
+    // Color based on normal for the sphere
+    if (t > 0.0) { // hit sphere at r(t)
+        auto normal = r.at(t) - sphereCenter;
+        return 0.5 * color(normal.x() + 1, normal.y() + 1, normal.z() + 1);
+    }
+    // Background
     vec3 unitDirection = unitVector(r.direction());
-    auto t = 0.5 * (unitDirection.y() + 1);
+    t = 0.5 * (unitDirection.y() + 1);
     return (1.0 - t) * color(1.0) + t * color(0.5, 0.7, 1.0); // LERP the colors
 }
 

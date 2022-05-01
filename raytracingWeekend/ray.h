@@ -16,7 +16,7 @@ public:
 	* @param t Parameter t in equation P(t) = <origin> + t * <direction>.
 	* @return A point on the ray at t
 	*/
-	point3 at(const double t) { return ori + t * dir; };
+	point3 at(const double t) const { return ori + t * dir; };
 private:
 	point3 ori;
 	vec3 dir;

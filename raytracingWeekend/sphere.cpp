@@ -26,6 +26,5 @@ bool sphere::hit(const ray& r, double tMin, double tMax, hitRecord& rec) const {
     vec3 outwardNormal = (rec.p - center) / radius;
     rec.setFaceNormal(r, outwardNormal);
 
-    assert(rec.normal.lengthSquare() == 1);
     return true;
 }

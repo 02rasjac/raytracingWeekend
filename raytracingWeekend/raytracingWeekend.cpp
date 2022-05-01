@@ -1,45 +1,22 @@
 #include <iostream>
-#include "vec3.h"
+#include "rtweekend.h"
+#include "hittableList.h"
 #include "color.h"
-#include "ray.h"
 #include "sphere.h"
-
-/*
-* Checks whether a ray collides with a sphere.
-* @param center Centerpoint of the sphere.
-* @param radius Radius of the sphere.
-* @param r The ray to check collision with.
-* @return Parameter t on the ray r that first hit the sphere. If no collison, then returns -1.0.
-*/
-double hitSphere(const point3& center, const double radius, const ray& r) {
-    vec3 oc = r.origin() - center; // Vector from origin to center
-    auto a = r.direction().lengthSquare();
-    auto halfB = dot(oc, r.direction());
-    auto c = oc.lengthSquare() - radius * radius;
-    auto discriminant = halfB * halfB - a * c;
-    if (discriminant < 0) {
-        return -1.0; // Did not hit the sphere
-    } 
-    return (-halfB - sqrt(discriminant)) / a; // Return t from at^2 + bt + c = 0
-}
 
 /**
 * Calculate a color for the ray. When compared to rays next to each other, they form a gradient.
 * @param r A ray to get the color from.
 * @return A color for this ray. 
 */
-color rayColor(const ray& r) {
-    //point3 sphereCenter(0, 0, -1);
-    sphere sph(point3(0, 0, -1), 0.5);
-    auto t = hitSphere(sph.center, sph.radius, r);
-    // Color based on normal for the sphere
-    if (t > 0.0) { // hit sphere at r(t)
-        auto normal = r.at(t) - sph.center;
-        return 0.5 * color(normal.x() + 1, normal.y() + 1, normal.z() + 1);
-    }
+color rayColor(const ray& r, const hittable& world) {
+    hitRecord rec;
+    if (world.hit(r, 0, infinity, rec))
+        return 0.5 * (rec.normal + color(1));
+
     // Background
     vec3 unitDirection = unitVector(r.direction());
-    t = 0.5 * (unitDirection.y() + 1);
+    auto t = 0.5 * (unitDirection.y() + 1);
     return (1.0 - t) * color(1.0) + t * color(0.5, 0.7, 1.0); // LERP the colors
 }
 
@@ -48,6 +25,11 @@ int main() {
     const double aspectRatio = 16.0 / 9.0;
     const int imageWidth = 400;
     const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
+
+    // World
+    hittableList world;
+    world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));        // Add sphere
+    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));   // Add "ground"
 
     // Camera
     double viewportHeight = 2.0;
@@ -69,7 +51,7 @@ int main() {
             double u = double(i) / (imageWidth - 1);
             double v = double(j) / (imageHeight - 1);
             ray r(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
-            color pixelColor = rayColor(r);
+            color pixelColor = rayColor(r, world);
             writeColor(std::cout, pixelColor);
         }
     }

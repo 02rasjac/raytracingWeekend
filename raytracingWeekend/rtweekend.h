@@ -36,6 +36,19 @@ inline double randomDouble(const double min, const double max) {
 	return min + (max - min) * randomDouble();
 }
 
+/*
+* Clamp the value of x to be in [min, max].
+* @param x Value to be clamped.
+* @param min Minimum value.
+* @param max Maximum value.
+* @return min if x < min, max if x > max, else x;
+*/
+inline double clamp(const double x, const double min, const double max) {
+	if (x < min) return min;
+	if (x > max) return max;
+	return x;
+}
+
 // Common headers
 #include "ray.h"
 #include "vec3.h"

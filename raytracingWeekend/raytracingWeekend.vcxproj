@@ -139,11 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="hittableList.cpp" />
     <ClCompile Include="raytracingWeekend.cpp" />
     <ClCompile Include="sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="hittable.h" />
     <ClInclude Include="hittableList.h" />

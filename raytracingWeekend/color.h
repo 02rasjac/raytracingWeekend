@@ -15,11 +15,11 @@ void writeColor(std::ostream& out, color pixelColor, const int samplesPerPixel) 
 	auto g = pixelColor.y();
 	auto b = pixelColor.z();
 
-	// Divide color by the sample
+	// Divide color by the sample and gamma-correct for gamma-2
 	auto scale = 1.0 / samplesPerPixel;
-	r *= scale;
-	g *= scale;
-	b *= scale;
+	r = sqrt(scale * r);
+	g = sqrt(scale * g);
+	b = sqrt(scale * b);
 
 	// Write the color
 	out << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << ' '

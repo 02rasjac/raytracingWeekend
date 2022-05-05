@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include "rtweekend.h"
 
 using std::sqrt;
 
@@ -90,4 +91,20 @@ inline vec3 cross(const vec3& u, const vec3& v) {
 
 inline vec3 unitVector(const vec3& v) {
 	return v / v.length();
+}
+
+inline vec3 random() {
+	return vec3(randomDouble(), randomDouble(), randomDouble());
+}
+
+inline vec3 random(const double min, const double max) {
+	return vec3(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max));
+}
+
+inline vec3 randomInUnitSphere() {
+	while (true) {
+		auto p = random(-1, 1);
+		if (p.lengthSquare() >= 1) continue;
+		return p;
+	}
 }

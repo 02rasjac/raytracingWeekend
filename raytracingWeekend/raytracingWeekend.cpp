@@ -10,10 +10,16 @@
 * @param r A ray to get the color from.
 * @return A color for this ray. 
 */
-color rayColor(const ray& r, const hittable& world) {
+color rayColor(const ray& r, const hittable& world, int depth) {
     hitRecord rec;
-    if (world.hit(r, 0, infinity, rec))
-        return 0.5 * (rec.normal + color(1));
+
+    // Return black if too deep
+    if (depth <= 0) return color(0);
+
+    if (world.hit(r, 0, infinity, rec)) {
+        point3 target = rec.p + rec.normal + randomInUnitSphere();
+        return 0.5 * rayColor(ray(rec.p, target - rec.p), world, --depth);
+    }
 
     // Background
     vec3 unitDirection = unitVector(r.direction());
@@ -27,6 +33,7 @@ int main() {
     const int imageWidth = 400;
     const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
     const int samplesPerPixel = 100;
+    const int maxDepth = 50;
 
     // World
     hittableList world;
@@ -47,7 +54,7 @@ int main() {
             for (int s = 0; s < samplesPerPixel; s++) {
                 double u = double(i) / (imageWidth - 1);
                 double v = double(j) / (imageHeight - 1);
-                pixelColor += rayColor(cam.getRay(u, v), world);
+                pixelColor += rayColor(cam.getRay(u, v), world, maxDepth);
             }
 
             writeColor(std::cout, pixelColor, samplesPerPixel);

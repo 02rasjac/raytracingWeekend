@@ -108,3 +108,7 @@ inline vec3 randomInUnitSphere() {
 		return p;
 	}
 }
+
+inline vec3 randomUnitVector() {
+	return unitVector(randomInUnitSphere());
+}

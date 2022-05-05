@@ -112,3 +112,8 @@ inline vec3 randomInUnitSphere() {
 inline vec3 randomUnitVector() {
 	return unitVector(randomInUnitSphere());
 }
+
+inline vec3 randomInHemisphere(const vec3& normal) {
+	vec3 inUnitSpehere = randomInUnitSphere();
+	return dot(inUnitSpehere, normal) > 0.0 ? inUnitSpehere : -inUnitSpehere;
+}

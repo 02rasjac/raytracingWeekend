@@ -36,6 +36,11 @@ public:
 	double length() const {
 		return sqrt(lengthSquare());
 	};
+	bool nearZero() const {
+		const auto s = 1e-8; // Very small constant
+		return (fabs(e[0]) < s && fabs(e[1]) < s && fabs(e[2]) < s);
+		// Wouldn't just "length() < s" work?
+	};
 public:
 	double e[3]; // Elements
 };
@@ -116,4 +121,8 @@ inline vec3 randomUnitVector() {
 inline vec3 randomInHemisphere(const vec3& normal) {
 	vec3 inUnitSpehere = randomInUnitSphere();
 	return dot(inUnitSpehere, normal) > 0.0 ? inUnitSpehere : -inUnitSpehere;
+}
+
+inline vec3 reflect(const vec3& v, const vec3& normal) {
+	return v - 2 * dot(v, normal) * normal;
 }

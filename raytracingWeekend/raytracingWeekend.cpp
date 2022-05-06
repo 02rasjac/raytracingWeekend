@@ -4,6 +4,7 @@
 #include "color.h"
 #include "sphere.h"
 #include "camera.h"
+#include "material.h"
 
 /**
 * Calculate a color for the ray. When compared to rays next to each other, they form a gradient.
@@ -17,8 +18,11 @@ color rayColor(const ray& r, const hittable& world, int depth) {
     if (depth <= 0) return color(0);
 
     if (world.hit(r, 0.001, infinity, rec)) {
-        point3 target = rec.p + rec.normal + randomInHemisphere(rec.normal);
-        return 0.5 * rayColor(ray(rec.p, target - rec.p), world, --depth);
+        ray scattered;
+        color attenuation;
+        if (rec.matPtr->scatter(r, rec, attenuation, scattered))
+            return attenuation * rayColor(scattered, world, --depth);
+        return color(0, 0, 0);
     }
 
     // Background
@@ -37,8 +41,15 @@ int main() {
 
     // World
     hittableList world;
-    world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));        // Add sphere
-    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));   // Add "ground"
+
+    auto materialGround = make_shared<lambertian>(color(0.8, 0.8, 0.0));
+    auto materialCenter = make_shared<lambertian>(color(0.7, 0.3, 0.3));
+    auto materialLeft = make_shared<metal>(color(0.8));
+    auto materialRight = make_shared<metal>(color(0.8, 0.6, 0.2));
+    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100, materialGround)); // Add "ground"
+    world.add(make_shared<sphere>(point3(0, 0, -1), 0.5, materialCenter));      // Add sphere
+    world.add(make_shared<sphere>(point3(-1.0, 0, -1), 0.5, materialLeft));     // Add sphere
+    world.add(make_shared<sphere>(point3(1.0, 0, -1), 0.5, materialRight));     // Add sphere
 
     // Camera
     camera cam;

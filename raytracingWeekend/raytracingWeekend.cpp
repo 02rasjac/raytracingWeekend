@@ -51,6 +51,7 @@ int main() {
     world.add(make_shared<sphere>(point3(0, -100.5, -1), 100, materialGround)); // Add "ground"
     world.add(make_shared<sphere>(point3(0, 0, -1), 0.5, materialCenter));      // Add sphere
     world.add(make_shared<sphere>(point3(-1.0, 0, -1), 0.5, materialLeft));     // Add sphere
+    world.add(make_shared<sphere>(point3(-1.0, 0, -1), -0.4, materialLeft));    // Make the left sphere hollow
     world.add(make_shared<sphere>(point3(1.0, 0, -1), 0.5, materialRight));     // Add sphere
 
     // Camera

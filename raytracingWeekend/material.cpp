@@ -27,7 +27,7 @@ bool dielectric::scatter(const ray& rayIn, const hitRecord& rec, color& atteunat
     double cosTheta = fmin(dot(-rayIn.direction(), rec.normal), 1.0);
     double sinTheta = sqrt(1.0 - cosTheta * cosTheta);
     // Reflect or refract
-    if (refractionRatio * sinTheta > 1.0) // Must reflect
+    if (refractionRatio * sinTheta > 1.0 || reflectance(cosTheta, refractionRatio) > randomDouble()) // Must reflect
         direction = reflect(unitDirection, rec.normal);
     else // Can refract
         direction = refract(unitDirection, rec.normal, refractionRatio);

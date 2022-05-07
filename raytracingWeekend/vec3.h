@@ -123,6 +123,15 @@ inline vec3 randomInHemisphere(const vec3& normal) {
 	return dot(inUnitSpehere, normal) > 0.0 ? inUnitSpehere : -inUnitSpehere;
 }
 
+inline vec3 randomInUnitDisk() {
+	while (true) {
+		auto x = randomDouble(-1, 1);
+		auto y = randomDouble(-1, 1);
+		if ((x * x + y * y) >= 1.0) continue;
+		return vec3(x, y, 0);
+	}
+}
+
 inline vec3 reflect(const vec3& v, const vec3& normal) {
 	return v - 2 * dot(v, normal) * normal;
 }

@@ -17,3 +17,12 @@ bool metal::scatter(const ray& rayIn, const hitRecord& rec, color& atteunation, 
     atteunation = albedo;
     return (dot(scattered.direction(), rec.normal) > 0.0); // Return TRUE if reflected, FALSE if absorbed
 }
+
+bool dielectric::scatter(const ray& rayIn, const hitRecord& rec, color& atteunation, ray& scattered) const {
+    atteunation = color(1.0);
+    auto refractionRatio = rec.frontFace ? (1.0 / indexOfRefraction) : indexOfRefraction;
+    auto unitDirection = unitVector(rayIn.direction());
+    auto refracted = refract(unitDirection, rec.normal, refractionRatio);
+    scattered = ray(rec.p, refracted);
+    return true;
+}

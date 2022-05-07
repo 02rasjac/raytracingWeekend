@@ -27,3 +27,11 @@ public:
 	double fuzz;
 };
 
+class dielectric : public material {
+public:
+	dielectric(const double indexOfRefraction) : indexOfRefraction(indexOfRefraction) {};
+	virtual bool scatter(const ray& rayIn, const hitRecord& rec, color& atteunation, ray& scattered) const override;
+public:
+	double indexOfRefraction;
+};
+

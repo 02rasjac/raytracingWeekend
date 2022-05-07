@@ -126,3 +126,11 @@ inline vec3 randomInHemisphere(const vec3& normal) {
 inline vec3 reflect(const vec3& v, const vec3& normal) {
 	return v - 2 * dot(v, normal) * normal;
 }
+
+inline vec3 refract(const vec3& uv, const vec3& normal, const double etaiOverEtat) {
+	auto cosTheta = fmin(dot(-uv, normal), 1.0); // Cos(angle) between normal and incoming ray
+	vec3 rayOutPerp = etaiOverEtat * (uv + cosTheta * normal);
+	vec3 rayOutPar = - sqrt(fabs(1.0 - rayOutPerp.lengthSquare())) * normal;
+	return rayOutPerp + rayOutPar;
+
+}

@@ -1,8 +1,9 @@
 #include "camera.h"
 
-camera::camera() {
-	const double aspectRatio = 16.0 / 9.0;
-    double viewportHeight = 2.0;
+camera::camera(const double vfov, const double aspectRatio) {
+    double theta = degToRad(vfov);
+    double h = tan(theta / 2);
+    double viewportHeight = 2.0 * h;
     double viewportWidth = viewportHeight * aspectRatio;
     double focalLength = 1.0;
 

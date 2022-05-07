@@ -1,18 +1,21 @@
 #include "camera.h"
 
-camera::camera(const double vfov, const double aspectRatio) {
+camera::camera(point3 lookfrom, point3 lookat, vec3 vup, const double vfov, const double aspectRatio) {
     double theta = degToRad(vfov);
     double h = tan(theta / 2);
     double viewportHeight = 2.0 * h;
     double viewportWidth = viewportHeight * aspectRatio;
-    double focalLength = 1.0;
+    
+    vec3 w = unitVector(lookfrom - lookat);
+    vec3 u = unitVector(cross(vup, w));
+    vec3 v = cross(w, u);
 
-    origin = point3(0);
-    horizontal = vec3(viewportWidth, 0, 0);
-    vertical = vec3(0, viewportHeight, 0);
-    lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - vec3(0, 0, focalLength);
+    origin = lookfrom;
+    horizontal = u * viewportWidth;
+    vertical = v * viewportHeight;
+    lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - w;
 }
 
-ray camera::getRay(double u, double v) const {
-    return ray(origin, lowerLeftCorner + u*horizontal + v*vertical - origin);
+ray camera::getRay(double s, double t) const {
+    return ray(origin, lowerLeftCorner + s*horizontal + t*vertical - origin);
 }

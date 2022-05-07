@@ -13,7 +13,7 @@ bool lambertian::scatter(const ray& rayIn, const hitRecord& rec, color& atteunat
 
 bool metal::scatter(const ray& rayIn, const hitRecord& rec, color& atteunation, ray& scattered) const {
     auto reflected = reflect(rayIn.direction(), rec.normal);
-    scattered = ray(rec.p, reflected);
+    scattered = ray(rec.p, reflected + fuzz * randomInUnitSphere());
     atteunation = albedo;
     return (dot(scattered.direction(), rec.normal) > 0.0); // Return TRUE if reflected, FALSE if absorbed
 }

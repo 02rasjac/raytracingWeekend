@@ -20,9 +20,10 @@ public:
 
 class metal : public material {
 public:
-	metal(const color& color) : albedo(color) {};
+	metal(const color& color, const double fuzz) : albedo(color), fuzz(fuzz < 1 ? fuzz : 1) {};
 	virtual bool scatter(const ray& rayIn, const hitRecord& rec, color& atteunation, ray& scattered) const override;
 public:
 	color albedo;
+	double fuzz;
 };
 
